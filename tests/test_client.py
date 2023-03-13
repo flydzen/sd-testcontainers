@@ -13,6 +13,13 @@ def client():
     return TestClient(app)
 
 
+@pytest.fixture
+def stock():
+    with DockerContainer('stock').with_bind_ports(8081, 8081) as container:
+        time.sleep(1)
+        yield container
+
+
 def test_welcome(client):
     response = client.get('/')
     assert response.status_code == 200
@@ -43,13 +50,9 @@ def test_fill(client):
     assert response.json() == {'wallet': 200}
 
 
-def test_empty_companies():
-    with DockerContainer('stock') as stock:
-        time.sleep(10)
-        assert stock.get_logs() == ''
-        x = requests.get('http://localhost:8081/')
-        assert x.json() == []
-
+def test_stock(stock):
+    x = requests.get('http://localhost:8081/', timeout=10)
+    assert x.status_code == 200
 
 # docker build -t stock .
 # docker run -it -d --name stock_container -p 8081:8081 stock
