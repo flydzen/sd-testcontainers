@@ -19,3 +19,8 @@ class NegativeSharesError(HTTPException):
 class NotEnoughMoneyError(HTTPException):
     def __init__(self):
         super().__init__(status_code=400, detail="NotEnoughMoneyError")
+
+
+class InteractionError(HTTPException):
+    def __init__(self, status, method, detail):
+        super().__init__(status_code=status, detail=f"InteractionError in {method}: {detail}")

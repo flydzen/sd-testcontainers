@@ -1,6 +1,7 @@
 from base.exceptions import NotEnoughMoneyError
 from client.actions.base_action import BaseAction
 from client.interaction import Interaction
+from client.repository import UserCompany
 
 
 class BuyAction(BaseAction):
@@ -16,5 +17,6 @@ class BuyAction(BaseAction):
             raise NotEnoughMoneyError
         expenditure = await Interaction.buy(self.company_name, self.amount)
         user.balance -= expenditure
+        user.portfolio.setdefault(self.company_name, UserCompany(self.company_name, 0)).amount += self.amount
         self.repository.save_user(user)
         return expenditure

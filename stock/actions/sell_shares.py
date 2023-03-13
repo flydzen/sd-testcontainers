@@ -12,9 +12,6 @@ class SellSharesAction(BaseAction):
         company = GetCompanyAction(name=self.name).run()
         if not company:
             raise CompanyNotFoundError
-        if company.amount < self.amount:
-            raise NotEnoughSharesError
-
         company.amount += self.amount
         self.repository.set_company(company)
-        return company.price
+        return company.price * self.amount

@@ -12,6 +12,6 @@ class BalanceAction(BaseAction):
         summ = user.balance
         for company in companies:
             if company.name in user.portfolio:
-                summ += user.portfolio[company.name] * company.price
+                summ += user.portfolio[company.name].amount * company.price
 
         return summ

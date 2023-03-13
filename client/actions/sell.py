@@ -12,7 +12,9 @@ class SellAction(BaseAction):
     async def run(self) -> float:
         user = self.repository.get_user(self.user_id)
         company = await Interaction.get_company(self.company_name)
-        if company.amount < self.amount:
+        if user.balance is None:
+            raise
+        if user.balance < self.amount * company.price:
             raise NotEnoughSharesError
         revenue = await Interaction.sell(self.company_name, self.amount)
         user.balance += revenue

@@ -17,4 +17,4 @@ class BuySharesAction(BaseAction):
 
         company.amount -= self.amount
         self.repository.set_company(company)
-        return company.price
+        return company.price * self.amount

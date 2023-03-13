@@ -52,7 +52,9 @@ def test_fill_company(client):
 
 def test_buy(client):
     assert client.post('/company?name=test&price=100&amount=200').status_code == 200
-    assert client.post('/buy?name=test&amount=100').status_code == 200
+    r1 = client.post('/buy?name=test&amount=100')
+    assert r1.status_code == 200
+    assert 100 * 100 / 2 < r1.json()['expenditure'] < 100 * 100 * 2
 
     response = client.get('/company?name=test')
 
@@ -66,10 +68,11 @@ def test_buy(client):
 
 def test_sell(client):
     assert client.post('/company?name=test&price=100&amount=200').status_code == 200
-    assert client.post('/sell?name=test&amount=100').status_code == 200
+    r1 = client.post('/sell?name=test&amount=100')
+    assert r1.status_code == 200
+    assert 100 * 100 / 2 < r1.json()['revenue'] < 100 * 100 * 2
 
     response = client.get('/company?name=test')
-
     assert response.status_code == 200
 
     assert_that(
